@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registrar Acceso</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form>
+    <ion-item>
+      <ion-label position="stacked">Nombre Residente</ion-label>
+      <ion-input [(ngModel)]="nuevoRegistro.nombreResidente" name="nombreResidente" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">RUT Residente</ion-label>
+      <ion-input [(ngModel)]="nuevoRegistro.rutResidente" name="rutResidente" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Departamento</ion-label>
+      <ion-input [(ngModel)]="nuevoRegistro.departamento" name="departamento" required type="number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Nombre de Visita</ion-label>
+      <ion-input [(ngModel)]="nuevoRegistro.nombreVisita" name="nombreVisita"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">RUT de Visita</ion-label>
+      <ion-input [(ngModel)]="nuevoRegistro.rutVisita" name="rutVisita"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Cantidad de Pulseras</ion-label>
+      <ion-input [(ngModel)]="nuevoRegistro.pulseras" name="pulseras" required type="number"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="registrar()">Registrar</ion-button>
+  </form>
+</ion-content>

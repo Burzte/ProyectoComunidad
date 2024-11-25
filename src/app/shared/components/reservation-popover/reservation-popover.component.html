@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Reserva de Estacionamiento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form *ngIf="estacionamiento.estado" (ngSubmit)="reservar()">
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input [(ngModel)]="nombre" name="nombre" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Patente</ion-label>
+      <ion-input [(ngModel)]="patente" name="patente" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Departamento</ion-label>
+      <ion-input [(ngModel)]="departamento" name="departamento" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Tipo de Reserva</ion-label>
+      <ion-select [(ngModel)]="tipoReserva" name="tipoReserva" required>
+        <ion-select-option value="Residente">Residente</ion-select-option>
+        <ion-select-option value="Visita">Visita</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="block" type="submit">Reservar</ion-button>
+  </form>
+
+  <div *ngIf="!estacionamiento.estado">
+    <p><strong>Reservado por:</strong> {{ estacionamiento.nombre }}</p>
+    <p><strong>Patente:</strong> {{ estacionamiento.patente }}</p>
+    <p><strong>Departamento:</strong> {{ estacionamiento.departamento }}</p>
+    <p><strong>Tipo de Reserva:</strong> {{ estacionamiento.tipoReserva }}</p>
+    <ion-button expand="block" color="danger" (click)="liberar()">Liberar Estacionamiento</ion-button>
+  </div>
+</ion-content>

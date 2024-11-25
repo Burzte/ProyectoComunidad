@@ -1,0 +1,33 @@
+<app-header [showMenu]="true" title="Perfil"></app-header>
+
+<ion-content class="ion-padding-top ion-text-center">
+
+  <ion-avatar>
+
+    <img *ngIf="user()?.image" [src]="user()?.image" />
+
+    <ion-icon *ngIf="!user()?.image" class="empty-icon" name="person-circle-outline"></ion-icon>
+
+  </ion-avatar>
+
+  <ion-button class="photo-btn" (click)="takeImage()" mode="ios" size="small" shape="round">
+    <ion-icon name="camera-outline"></ion-icon>
+  </ion-button>
+
+  <h2>{{user().name}}</h2>
+  <p>{{user().role}}</p>
+  <p>{{user().phone}}</p>
+  <p>Departamento: {{user().department}}</p>
+  <p>Estacionamiento: {{user().parking}}</p>
+
+  <ion-item (click)="openEditProfile()" button detail>
+    <ion-icon color="tertiary" slot="start" name="person-outline"></ion-icon>
+    <ion-label>Editar Perfil</ion-label>
+  </ion-item>
+
+  <ion-item button detail>
+    <ion-icon color="tertiary" slot="start" name="document-outline"></ion-icon>
+    <ion-label>Documentos</ion-label>
+  </ion-item>
+
+</ion-content>

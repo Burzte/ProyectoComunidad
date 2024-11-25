@@ -1,0 +1,16 @@
+<app-header [showMenu]="true" title="Inicio"></app-header>
+<ion-content>
+  <ion-card class="ion-text-center" *ngFor="let item of items" [routerLink]="[item.route]">
+    <ion-card-header>
+      <ion-card-title>{{ item.title }}</ion-card-title>
+      <ion-card-subtitle>{{ item.subtitle }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <!-- Imagen local dinámica según la card -->
+      <ion-img class="card-image" [src]="item.imageUrl" alt="Imagen de {{ item.title }}"></ion-img>
+      {{ item.content }}
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

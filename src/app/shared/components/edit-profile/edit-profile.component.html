@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar Perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <!-- Editar nombre -->
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input [(ngModel)]="updatedUser.name"></ion-input>
+    </ion-item>
+
+    <!-- Editar departamento -->
+    <ion-item>
+      <ion-label position="stacked">Departamento</ion-label>
+      <ion-input [(ngModel)]="updatedUser.department"></ion-input>
+    </ion-item>
+
+    <!-- Editar torre -->
+    <ion-item>
+      <ion-label position="stacked">Torre</ion-label>
+      <ion-input [(ngModel)]="updatedUser.tower"></ion-input>
+    </ion-item>
+
+    <!-- Editar estacionamiento -->
+    <ion-item>
+      <ion-label position="stacked">Estacionamiento</ion-label>
+      <ion-input [(ngModel)]="updatedUser.parking"></ion-input>
+    </ion-item>
+
+    <!-- Editar teléfono -->
+    <ion-item>
+      <ion-label position="stacked">Teléfono</ion-label>
+      <ion-input [(ngModel)]="updatedUser.phone"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <div class="ion-padding">
+    <ion-button expand="block" color="primary" (click)="saveChanges()">Guardar Cambios</ion-button>
+  </div>
+</ion-content>
