@@ -1,0 +1,27 @@
+<ion-header>
+  <app-header [showMenu]="true" title="Registro de Encomiendas"></app-header>
+</ion-header>
+
+<ion-content>
+  <!-- Botón para abrir el formulario en un modal -->
+  <ion-button *ngIf="isConserje()" color="tertiary" expand="block" (click)="abrirModal()">Registrar Encomienda</ion-button>
+
+  <!-- Lista de encomiendas -->
+  <ion-list>
+    <ion-card *ngFor="let encomienda of encomiendas">
+      <ion-card-header>
+        <ion-card-title>
+          Encomienda para: {{ encomienda.nombreDestinatario }} (Departamento {{ encomienda.departamento }})
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Empaque:</strong> {{ encomienda.empaque }}</p>
+        <p><strong>Tamaño:</strong> {{ encomienda.tamano }}</p>
+        <p><strong>Empresa:</strong> {{ encomienda.empresa }}</p>
+      </ion-card-content>
+      <ion-button *ngIf="isConserje()" color="danger" expand="block" (click)="retirarEncomienda(encomienda)">
+        Retirar Pedido
+      </ion-button>
+    </ion-card>
+  </ion-list>
+</ion-content>

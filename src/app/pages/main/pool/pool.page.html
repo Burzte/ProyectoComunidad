@@ -1,0 +1,35 @@
+<ion-header>
+  <app-header [showMenu]="true" title="Control de Piscina"></app-header>
+</ion-header>
+
+<ion-content>
+  <!-- Mostrar el botón solo si el rol es "Conserje" -->
+  <ion-button
+    *ngIf="isConserje()"
+    (click)="abrirModal()"
+    color="tertiary"
+    expand="block"
+  >
+    Registrar Acceso
+  </ion-button>
+
+  <!-- Lista de registros (visible para todos los usuarios) -->
+  <ion-card *ngFor="let registro of registros">
+    <ion-card-header>
+      <ion-card-title>Departamento {{ registro.departamento }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        <strong>Residente:</strong> {{ registro.nombreResidente }} (RUT:
+        {{ registro.rutResidente }})
+      </p>
+      <p><strong>Visitas:</strong></p>
+      <ul>
+        <li *ngFor="let visita of registro.visitas">
+          {{ visita.nombre }} (RUT: {{ visita.rut }}) - Pulsera: {{ visita.color }}
+        </li>
+      </ul>
+      <p><strong>Total Pulseras:</strong> {{ registro.totalPulseras }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

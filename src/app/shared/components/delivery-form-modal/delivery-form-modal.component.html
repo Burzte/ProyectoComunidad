@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registrar Encomienda</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form>
+    <ion-item>
+      <ion-label position="stacked">Empaque</ion-label>
+      <ion-select [(ngModel)]="nuevaEncomienda.empaque" name="empaque" placeholder="Seleccione empaque" required>
+        <ion-select-option value="Bolsa">Bolsa</ion-select-option>
+        <ion-select-option value="Caja">Caja</ion-select-option>
+        <ion-select-option value="Otro">Otro</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Tamaño</ion-label>
+      <ion-select [(ngModel)]="nuevaEncomienda.tamano" name="tamano" placeholder="Seleccione tamaño" required>
+        <ion-select-option value="Pequeño">Pequeño</ion-select-option>
+        <ion-select-option value="Mediano">Mediano</ion-select-option>
+        <ion-select-option value="Grande">Grande</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Empresa</ion-label>
+      <ion-input [(ngModel)]="nuevaEncomienda.empresa" name="empresa" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Nombre del Destinatario</ion-label>
+      <ion-input [(ngModel)]="nuevaEncomienda.nombreDestinatario" name="nombreDestinatario" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Departamento</ion-label>
+      <ion-input [(ngModel)]="nuevaEncomienda.departamento" name="departamento" required type="number"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="registrar()">Registrar</ion-button>
+  </form>
+</ion-content>
