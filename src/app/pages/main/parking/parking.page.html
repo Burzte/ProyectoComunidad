@@ -1,14 +1,14 @@
 <app-header [showMenu]="true" title="Estacionamientos"></app-header>
 
 <ion-content>
-
+  <!-- Barra de búsqueda -->
   <ion-searchbar
     placeholder="Buscar número de estacionamiento"
     [(ngModel)]="filtroNumero"
     (ionInput)="filtrarEstacionamientos()">
   </ion-searchbar>
 
-
+  <!-- Lista de estacionamientos -->
   <div class="parking-grid">
     <ion-card
       *ngFor="let estacionamiento of estacionamientosFiltrados"
@@ -16,8 +16,7 @@
         'disponible': estacionamiento.estado,
         'reservado': !estacionamiento.estado
       }"
-      (click)="abrirPopover(estacionamiento)"
-    >
+      (click)="abrirPopover(estacionamiento)">
       <ion-card-header>
         <h3>E - {{ estacionamiento.id }}</h3>
       </ion-card-header>
@@ -33,5 +32,5 @@
     </ion-card>
   </div>
 </ion-content>
-<app-footer></app-footer>
 
+<app-footer></app-footer>

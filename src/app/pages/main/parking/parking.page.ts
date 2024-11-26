@@ -14,13 +14,13 @@ export class ParkingPage implements OnInit {
   estacionamientosFiltrados: any[] = []; // Lista filtrada
   filtroNumero: string = ''; // Valor del filtro
   role: string = ''; // Rol del usuario
-  userUID: string = ''; // UID del usuario para los residentes
+  userUID: string = ''; // UID del usuario
 
   constructor(private popoverCtrl: PopoverController, private firebaseService: FirebaseService) {}
 
   ngOnInit() {
-    this.getUserRole();
-    this.cargarEstacionamientos();
+    this.cargarEstacionamientos(); // Inicializamos todos los estacionamientos
+    this.getUserRole(); // Obtenemos el rol del usuario
   }
 
   // Obtener el rol del usuario
@@ -29,34 +29,27 @@ export class ParkingPage implements OnInit {
     if (user) {
       this.userUID = user.uid;
       const userDoc = await this.firebaseService.getDocument(`users/${user.uid}`);
-      this.role = userDoc?.['role'] || '';  // Asignamos el rol del usuario
+      this.role = userDoc?.['role'] || ''; // Asignamos el rol del usuario
+      console.log('Rol del usuario:', this.role);
+    } else {
+      console.error('No se pudo obtener el usuario autenticado.');
     }
   }
 
+  // Cargar todos los estacionamientos (sin filtros)
   cargarEstacionamientos() {
-    for (let i = 1; i <= 200; i++) {
-      this.estacionamientos.push({
-        id: i,
-        estado: true,
-        nombre: '',
-        patente: '',
-        departamento: '',
-        tipoReserva: '',
-      });
-    }
-
-    // Si el usuario es residente, solo se cargan los estacionamientos que le corresponden
-    if (this.role === 'Residente') {
-      this.estacionamientos = this.estacionamientos.filter(est => est.id === 30);  // Asumimos que el residente tiene asignado el estacionamiento 30
-    } else if (this.role === 'Conserje') {
-      // El conserje puede modificar los estacionamientos del 1 al 20
-      this.estacionamientos = this.estacionamientos.filter(est => est.id >= 1 && est.id <= 20);
-    }
-
+    this.estacionamientos = Array.from({ length: 200 }, (_, i) => ({
+      id: i + 1,
+      estado: true, // Disponible
+      nombre: '',
+      patente: '',
+      departamento: '',
+      tipoReserva: '',
+    }));
     this.estacionamientosFiltrados = [...this.estacionamientos]; // Copia inicial
   }
 
-
+  // Filtrar estacionamientos por número
   filtrarEstacionamientos() {
     const filtro = this.filtroNumero.trim().toLowerCase();
     if (filtro) {
@@ -68,25 +61,23 @@ export class ParkingPage implements OnInit {
     }
   }
 
+  // Abrir popover para modificar un estacionamiento
   async abrirPopover(estacionamiento: any) {
-    // Solo los residentes pueden modificar su estacionamiento asignado
-    if (this.role === 'Residente' && estacionamiento.id !== 30) {
-      return; // No permitir la modificación de otros estacionamientos
-    }
-
-    // El conserje puede modificar los estacionamientos 1-20
-    if (this.role === 'Conserje' && estacionamiento.id >= 1 && estacionamiento.id <= 20) {
+    // Validar permisos para modificar según el rol y rango de estacionamientos
+    if (
+      (this.role === 'Conserje' && estacionamiento.id >= 1 && estacionamiento.id <= 20) ||
+      (this.role === 'Residente' && estacionamiento.id >= 21 && estacionamiento.id <= 200)
+    ) {
       const popover = await this.popoverCtrl.create({
         component: ReservationPopoverComponent,
         componentProps: { estacionamiento },
         translucent: true,
       });
-
       await popover.present();
     } else {
-      // Si no es un residente o conserje autorizado, no hacer nada
-      return;
+      console.warn('No tienes permisos para modificar este estacionamiento.');
+      return; // No hacer nada si no tiene permisos
     }
   }
-
 }
+
