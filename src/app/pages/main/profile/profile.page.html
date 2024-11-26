@@ -19,6 +19,7 @@
   <p>{{user().phone}}</p>
   <ng-container *ngIf="user()?.role === 'Residente'">
     <p>Departamento: {{user().department}}</p>
+    <p>Torre: {{user().tower}}</p>
     <p>Estacionamiento: {{user().parking}}</p>
   </ng-container>
 
