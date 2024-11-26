@@ -10,11 +10,11 @@ import { getAuth } from 'firebase/auth';
   styleUrls: ['./parking.page.scss'],
 })
 export class ParkingPage implements OnInit {
-  estacionamientos: any[] = []; // Lista completa de estacionamientos
-  estacionamientosFiltrados: any[] = []; // Lista filtrada
-  filtroNumero: string = ''; // Valor del filtro
-  role: string = ''; // Rol del usuario
-  userUID: string = ''; // UID del usuario para los residentes
+  estacionamientos: any[] = [];
+  estacionamientosFiltrados: any[] = [];
+  filtroNumero: string = '';
+  role: string = '';
+  userUID: string = '';
 
   constructor(private popoverCtrl: PopoverController, private firebaseService: FirebaseService) {}
 
@@ -29,7 +29,7 @@ export class ParkingPage implements OnInit {
     if (user) {
       this.userUID = user.uid;
       const userDoc = await this.firebaseService.getDocument(`users/${user.uid}`);
-      this.role = userDoc?.['role'] || '';  // Asignamos el rol del usuario
+      this.role = userDoc?.['role'] || '';
     }
   }
 
@@ -45,15 +45,13 @@ export class ParkingPage implements OnInit {
       });
     }
 
-    // Si el usuario es residente, solo se cargan los estacionamientos que le corresponden
     if (this.role === 'Residente') {
-      this.estacionamientos = this.estacionamientos.filter(est => est.id === 30);  // Asumimos que el residente tiene asignado el estacionamiento 30
+      this.estacionamientos = this.estacionamientos.filter(est => est.id >= 21 && est.id <= 200);
     } else if (this.role === 'Conserje') {
-      // El conserje puede modificar los estacionamientos del 1 al 20
       this.estacionamientos = this.estacionamientos.filter(est => est.id >= 1 && est.id <= 20);
     }
 
-    this.estacionamientosFiltrados = [...this.estacionamientos]; // Copia inicial
+    this.estacionamientosFiltrados = [...this.estacionamientos];
   }
 
 
@@ -69,12 +67,10 @@ export class ParkingPage implements OnInit {
   }
 
   async abrirPopover(estacionamiento: any) {
-    // Solo los residentes pueden modificar su estacionamiento asignado
-    if (this.role === 'Residente' && estacionamiento.id !== 30) {
-      return; // No permitir la modificación de otros estacionamientos
+    if (this.role === 'Residente' && estacionamiento.id >= 21 && estacionamiento.id <= 200) {
+      return;
     }
 
-    // El conserje puede modificar los estacionamientos 1-20
     if (this.role === 'Conserje' && estacionamiento.id >= 1 && estacionamiento.id <= 20) {
       const popover = await this.popoverCtrl.create({
         component: ReservationPopoverComponent,
@@ -84,7 +80,6 @@ export class ParkingPage implements OnInit {
 
       await popover.present();
     } else {
-      // Si no es un residente o conserje autorizado, no hacer nada
       return;
     }
   }

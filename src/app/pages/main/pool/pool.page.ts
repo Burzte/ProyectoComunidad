@@ -23,21 +23,18 @@ export class PoolPage implements OnInit {
     this.getUserRole();
   }
 
-  // Método para obtener el rol del usuario
   async getUserRole() {
     const user = getAuth().currentUser;
     if (user) {
       const userDoc = await this.firebaseService.getDocument(`users/${user.uid}`);
-      this.role = userDoc?.['role'];  // Asignamos el rol obtenido
+      this.role = userDoc?.['role'];
     }
   }
 
-  // Método para verificar si el usuario tiene el rol de Conserje
   isConserje() {
     return this.role === 'Conserje';
   }
 
-  // Método para verificar si el usuario tiene el rol de Residente
   isResidente() {
     return this.role === 'Residente';
   }
@@ -61,7 +58,6 @@ export class PoolPage implements OnInit {
 
     const departamentoExistente = this.registros.find(reg => reg.departamento === departamento);
 
-    // Validar restricciones de visitas
     if (departamentoExistente) {
       const totalVisitas = departamentoExistente.visitas.length;
       if (totalVisitas >= 2 && nombreVisita) {
@@ -70,7 +66,6 @@ export class PoolPage implements OnInit {
       }
     }
 
-    // Crear el registro si no existe
     if (!departamentoExistente) {
       this.registros.push({
         departamento,
@@ -82,7 +77,6 @@ export class PoolPage implements OnInit {
         totalPulseras: pulseras,
       });
     } else {
-      // Actualizar registro existente
       if (nombreVisita) {
         departamentoExistente.visitas.push({ nombre: nombreVisita, rut: rutVisita, color: 'Rojo' });
       }

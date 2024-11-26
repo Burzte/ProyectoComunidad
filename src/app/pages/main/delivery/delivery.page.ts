@@ -10,7 +10,7 @@ import { getAuth } from 'firebase/auth';
   styleUrls: ['./delivery.page.scss'],
 })
 export class DeliveryPage {
-  encomiendas: any[] = []; // Lista de encomiendas
+  encomiendas: any[] = [];
   role: string = '';
 
   constructor(private modalController: ModalController, private firebaseService: FirebaseService) {}
@@ -19,21 +19,18 @@ export class DeliveryPage {
     this.getUserRole();
   }
 
-  // Método para obtener el rol del usuario
   async getUserRole() {
     const user = getAuth().currentUser;
     if (user) {
       const userDoc = await this.firebaseService.getDocument(`users/${user.uid}`);
-      this.role = userDoc?.['role'];  // Asignamos el rol obtenido
+      this.role = userDoc?.['role'];
     }
   }
 
-  // Método para verificar si el usuario tiene el rol de Conserje
   isConserje() {
     return this.role === 'Conserje';
   }
 
-  // Método para verificar si el usuario tiene el rol de Residente
   isResidente() {
     return this.role === 'Residente';
   }
