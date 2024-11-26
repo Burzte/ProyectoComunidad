@@ -24,6 +24,10 @@ export class EditProfileComponent {
     this.updatedUser = { ...this.user };
   }
 
+  usuario(): User {
+    return this.utilsSvc.getFromLocalStorage('user');
+  }
+
   close() {
     this.modalCtrl.dismiss();
   }
