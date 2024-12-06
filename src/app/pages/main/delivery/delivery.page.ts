@@ -58,14 +58,28 @@ export class DeliveryPage implements OnInit {
   // Cargar encomiendas desde Firebase
   cargarEncomiendas() {
     this.firebaseService.getCollection('encomiendas').subscribe(data => {
-      this.encomiendas = data;
+      this.encomiendas = data.map(encomienda => {
+        return {
+          ...encomienda,
+          id: encomienda.id || encomienda.doc?.id || 'id-no-disponible',
+        };
+      });
     });
   }
 
   // Registrar encomienda en Firebase
   async registrarEncomienda(encomienda: any) {
     try {
-      await this.firebaseService.addDocument('encomiendas', encomienda);
+      // Verificar y manejar valores undefined
+      encomienda = {
+        ...encomienda,
+        tamano: encomienda.tamano || '', // Proporcionar un valor por defecto si está undefined
+      };
+
+      const docRef = this.firebaseService.firestore.collection('encomiendas').doc();
+      encomienda.id = docRef.ref.id; // Aquí usamos `ref.id` para obtener el ID generado automáticamente
+
+      await this.firebaseService.addDeliveryDocument('encomiendas', encomienda.id, encomienda);
       this.encomiendas.push(encomienda); // Añadir a la lista local
     } catch (error) {
       console.error('Error al registrar encomienda:', error);
@@ -75,7 +89,11 @@ export class DeliveryPage implements OnInit {
   // Retirar encomienda de Firebase
   async retirarEncomienda(encomienda: any) {
     try {
-      // Usar el método deleteDeliveryDocument para marcar como eliminada la encomienda
+      if (!encomienda.id || encomienda.id === 'id-no-disponible') {
+        console.error('Error: No se encontró el ID de la encomienda', encomienda);
+        throw new Error('ID de encomienda no encontrado');
+      }
+
       await this.firebaseService.deleteDeliveryDocument(`encomiendas/${encomienda.id}`);
       this.encomiendas = this.encomiendas.filter(e => e.id !== encomienda.id); // Eliminar de la lista local
     } catch (error) {
@@ -83,4 +101,3 @@ export class DeliveryPage implements OnInit {
     }
   }
 }
-

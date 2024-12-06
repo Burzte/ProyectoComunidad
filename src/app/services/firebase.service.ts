@@ -1,10 +1,9 @@
-// src/app/services/firebase.service.ts
 import { inject, Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from 'firebase/auth';
 import { User } from '../models/user.model';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { getFirestore, setDoc, doc, getDoc, addDoc, collection, updateDoc, getDocs, query, where, writeBatch } from '@angular/fire/firestore';
+import { getFirestore, setDoc, doc, getDoc, addDoc, collection, deleteDoc, updateDoc, getDocs, query, where, writeBatch } from '@angular/fire/firestore';
 import { UtilsService } from './utils.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { getStorage, uploadString, ref, getDownloadURL } from 'firebase/storage';
@@ -273,16 +272,29 @@ async getPoolData(): Promise<{ data: any[], braceletCounts?: Record<string, numb
   }
 
   async addDeliveryDocument(collectionName: string, docId: string, data: any) {
-    return setDoc(doc(getFirestore(), `${collectionName}/${docId}`), data);
+    try {
+      await setDoc(doc(getFirestore(), `${collectionName}/${docId}`), data);
+    } catch (error) {
+      console.error('Error al agregar documento:', error);
+      throw error;
+    }
   }
+
 
   async updateDeliveryDocument(path: string, data: any) {
     return updateDoc(doc(getFirestore(), path), data);
   }
 
-  async deleteDeliveryDocument(path: string) {
-    return updateDoc(doc(getFirestore(), path), { deleted: true });
+// Elimina un documento
+async deleteDeliveryDocument(path: string) {
+  try {
+    await deleteDoc(doc(getFirestore(), path));
+  } catch (error) {
+    console.error('Error al eliminar documento:', error);
+    throw error;
   }
+}
+
 
   // **** ALMACENAMIENTO ****
 
