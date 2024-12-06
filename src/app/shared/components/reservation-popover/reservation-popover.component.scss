@@ -1,0 +1,51 @@
+.full-width-popover {
+  --min-width: 75vw; /* Ancho mínimo del 75% de la ventana */
+  --max-width: 85vw; /* Ancho máximo del 85% de la ventana */
+  --background: #ffffff; /* Fondo blanco */
+  border-radius: 12px; /* Bordes redondeados */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Sombra para profundidad */
+  max-height: 80vh; /* Limitar la altura máxima al 80% de la ventana */
+  height: auto; /* Altura automática según el contenido */
+}
+
+.popover-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Alineación del contenido hacia arriba */
+  padding: 16px;
+  width: 100%; /* El contenido ocupa todo el ancho disponible */
+  box-sizing: border-box;
+  overflow-y: auto; /* Permite el desplazamiento si el contenido excede la altura */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Espaciado entre los campos */
+  width: 100%;
+}
+
+ion-title {
+  font-size: 15px; /* Ajustar el tamaño del título */
+  font-weight: bold; /* Negrita */
+  text-align: center; /* Centrado del título */
+  margin-bottom: 16px; /* Separación con el contenido */
+  word-wrap: break-word; /* Permite el salto de línea si el texto es largo */
+  white-space: normal;
+}
+
+ion-item {
+  width: 100%; /* El contenido del item ocupa todo el ancho */
+}
+
+ion-button {
+  margin-top: 16px; /* Espaciado del botón */
+}
+
+ion-select {
+  width: 100%;
+}
+
+ion-input {
+  width: 100%;
+}

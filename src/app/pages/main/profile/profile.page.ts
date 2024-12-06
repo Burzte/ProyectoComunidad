@@ -10,57 +10,76 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage {
 
   firebaseSvc = inject(FirebaseService);
   utilsSvc = inject(UtilsService);
   modalCtrl = inject(ModalController);
-
-
-  ngOnInit() {
-  }
 
   user(): User {
     return this.utilsSvc.getFromLocalStorage('user');
   }
 
   //** TOMAR O SELECCIONAR UNA IMAGEN **
-  async takeImage(){
+  async takeImage() {
+    const user = this.user();
+    if (!user || !user.uid) {
+      this.utilsSvc.presentToast({
+        message: 'Error: Usuario no autenticado',
+        duration: 3000,
+        color: 'danger',
+        position: 'middle',
+        icon: 'alert-circle-outline',
+      });
+      return;
+    }
 
-    let user = this.user();
-    let path = `users/${user.uid}`
-
-    const dataUrl = (await this.utilsSvc.takePicture('Imagen del perfil')).dataUrl;
-
+    const path = `users/${user.uid}`;
     const loading = await this.utilsSvc.loading();
-    await loading.present();
 
-    let imagePath = `${user.uid}/profile`;
-    user.image = await this.firebaseSvc.uploadImage(imagePath, dataUrl);
+    try {
+      // Tomar o seleccionar imagen usando la función modificada del servicio
+      const imageResult = await this.utilsSvc.takePicture();
 
-    this.firebaseSvc.updateDocument(path, {image: user.image}).then(async res => {
+      // Si el usuario cancela, se sale sin hacer nada
+      if (!imageResult) {
+        console.log('El usuario canceló la acción');
+        return; // Sale si no se seleccionó una imagen
+      }
+
+      // Si se selecciona o toma una foto, subimos la imagen
+      const uploadedImageUrl = await this.firebaseSvc.uploadImage(
+        `${user.uid}/profile`,
+        imageResult.dataUrl
+      );
+
+      user.image = uploadedImageUrl;
+      await this.firebaseSvc.updateDocument(path, { image: user.image });
       this.utilsSvc.saveInLocalStorage('user', user);
+
+      await loading.present();
 
       this.utilsSvc.presentToast({
         message: 'Imagen de Perfil actualizada',
         duration: 3000,
         color: 'tertiary',
         position: 'middle',
-        icon: 'checkmark-circle-outline'
-      })
-    }).catch(error => {
-      console.log(error);
+        icon: 'checkmark-circle-outline',
+      });
 
+    } catch (error) {
+      console.error(error);
       this.utilsSvc.presentToast({
         message: 'Error al actualizar la imagen de Perfil',
         duration: 3000,
         color: 'danger',
         position: 'middle',
-        icon: 'alert-circle-outline'
-      })
-    }).finally(() => {
+        icon: 'alert-circle-outline',
+      });
+    } finally {
+      // Aseguramos que el loading se cierre sin importar si se completó la operación o se canceló
       loading.dismiss();
-    })
+    }
   }
 
    // Método para abrir el popover

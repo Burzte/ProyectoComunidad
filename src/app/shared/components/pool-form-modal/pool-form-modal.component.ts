@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-pool-form-modal',
@@ -7,22 +7,59 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./pool-form-modal.component.scss'],
 })
 export class PoolFormModalComponent {
-  nuevoRegistro = {
-    nombreResidente: '',
-    rutResidente: '',
-    departamento: '',
-    nombreVisita: '',
-    rutVisita: '',
-    pulseras: 0,
+  registro: any = {
+    residentes: [],
+    visitas: [],
+    pulserasVerdes: 0,
+    pulserasCalipso: 0,
+    departamento: '',  // Asegúrate de que esta propiedad esté definida
   };
 
-  constructor(private modalController: ModalController) {}
+  maxPulserasVerdes = 2;
+  maxPulserasCalipso = 2;
+
+  constructor(
+    private modalController: ModalController,
+    private alertController: AlertController
+  ) {}
 
   cerrarModal() {
     this.modalController.dismiss();
   }
 
-  registrar() {
-    this.modalController.dismiss(this.nuevoRegistro);
+  async registrar() {
+    console.log('Datos del registro:', this.registro); // Ayuda para depurar
+    this.modalController.dismiss(this.registro);
+  }
+
+  agregarResidente() {
+    if (this.registro.residentes.length < this.maxPulserasVerdes) {
+      this.registro.residentes.push({ nombre: '', rut: '' });
+    } else {
+      this.mostrarAlerta(
+        'Límite excedido',
+        'Solo se permiten 2 pulseras verdes para residentes.'
+      );
+    }
+  }
+
+  agregarVisita() {
+    if (this.registro.visitas.length < this.maxPulserasCalipso) {
+      this.registro.visitas.push({ nombre: '', rut: '' });
+    } else {
+      this.mostrarAlerta(
+        'Límite excedido',
+        'Solo se permiten 2 pulseras calipso para visitas.'
+      );
+    }
+  }
+
+  async mostrarAlerta(titulo: string, mensaje: string) {
+    const alert = await this.alertController.create({
+      header: titulo,
+      message: mensaje,
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 }

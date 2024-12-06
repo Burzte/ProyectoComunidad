@@ -9,16 +9,21 @@ import { getAuth } from 'firebase/auth';
   templateUrl: './delivery.page.html',
   styleUrls: ['./delivery.page.scss'],
 })
-export class DeliveryPage {
+export class DeliveryPage implements OnInit {
   encomiendas: any[] = [];
   role: string = '';
 
-  constructor(private modalController: ModalController, private firebaseService: FirebaseService) {}
+  constructor(
+    private modalController: ModalController,
+    private firebaseService: FirebaseService
+  ) {}
 
   ngOnInit() {
     this.getUserRole();
+    this.cargarEncomiendas(); // Cargar encomiendas desde Firebase
   }
 
+  // Obtener rol del usuario actual
   async getUserRole() {
     const user = getAuth().currentUser;
     if (user) {
@@ -35,6 +40,7 @@ export class DeliveryPage {
     return this.role === 'Residente';
   }
 
+  // Abrir modal para registrar encomienda
   async abrirModal() {
     const modal = await this.modalController.create({
       component: DeliveryFormModalComponent,
@@ -49,11 +55,32 @@ export class DeliveryPage {
     return await modal.present();
   }
 
-  registrarEncomienda(encomienda: any) {
-    this.encomiendas.push(encomienda);
+  // Cargar encomiendas desde Firebase
+  cargarEncomiendas() {
+    this.firebaseService.getCollection('encomiendas').subscribe(data => {
+      this.encomiendas = data;
+    });
   }
 
-  retirarEncomienda(encomienda: any) {
-    this.encomiendas = this.encomiendas.filter(e => e !== encomienda);
+  // Registrar encomienda en Firebase
+  async registrarEncomienda(encomienda: any) {
+    try {
+      await this.firebaseService.addDocument('encomiendas', encomienda);
+      this.encomiendas.push(encomienda); // Añadir a la lista local
+    } catch (error) {
+      console.error('Error al registrar encomienda:', error);
+    }
+  }
+
+  // Retirar encomienda de Firebase
+  async retirarEncomienda(encomienda: any) {
+    try {
+      // Usar el método deleteDeliveryDocument para marcar como eliminada la encomienda
+      await this.firebaseService.deleteDeliveryDocument(`encomiendas/${encomienda.id}`);
+      this.encomiendas = this.encomiendas.filter(e => e.id !== encomienda.id); // Eliminar de la lista local
+    } catch (error) {
+      console.error('Error al retirar encomienda:', error);
+    }
   }
 }
+

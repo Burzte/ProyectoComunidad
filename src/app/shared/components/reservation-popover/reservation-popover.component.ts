@@ -17,21 +17,27 @@ export class ReservationPopoverComponent {
 
   reservar() {
     if (this.nombre && this.patente && this.departamento && this.tipoReserva) {
-      this.estacionamiento.estado = false;
-      this.estacionamiento.nombre = this.nombre;
-      this.estacionamiento.patente = this.patente;
-      this.estacionamiento.departamento = this.departamento;
-      this.estacionamiento.tipoReserva = this.tipoReserva;
-      this.popoverCtrl.dismiss({ updated: true });
+      const updatedEstacionamiento = {
+        ...this.estacionamiento,
+        estado: false,
+        nombre: this.nombre,
+        patente: this.patente,
+        departamento: this.departamento,
+        tipoReserva: this.tipoReserva,
+      };
+      this.popoverCtrl.dismiss(updatedEstacionamiento, 'confirm');
     }
   }
 
   liberar() {
-    this.estacionamiento.estado = true;
-    this.estacionamiento.nombre = null;
-    this.estacionamiento.patente = null;
-    this.estacionamiento.departamento = null;
-    this.estacionamiento.tipoReserva = null;
-    this.popoverCtrl.dismiss({ updated: true });
+    const updatedEstacionamiento = {
+      ...this.estacionamiento,
+      estado: true,
+      nombre: null,
+      patente: null,
+      departamento: null,
+      tipoReserva: null,
+    };
+    this.popoverCtrl.dismiss(updatedEstacionamiento, 'confirm');
   }
 }

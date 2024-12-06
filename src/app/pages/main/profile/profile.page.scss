@@ -6,7 +6,7 @@ ion-avatar{
 
 .photo-btn{
   position: relative;
-  bottom: 25px;
+  bottom: 5px;
 }
 
 h2{
@@ -23,9 +23,18 @@ ion-item{
 }
 
 img{
-  width: 100%; 
-  height: 250px;
+  width: 100%;
+  height: 150px;
   display: block;
   margin: 0 auto;
   margin-top: 20px;
+}
+
+.imgCondominio {
+  width: 100%;
+  height: 180px;
+  display: block;
+  margin: 0 auto;
+  margin-top: 50px;
+  position: relative; /* Permite que la imagen se mueva o se ajuste sin afectar el flujo normal del documento */
 }

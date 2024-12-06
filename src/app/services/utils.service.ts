@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController, ModalOptions, ToastController, ToastOptions } from '@ionic/angular';
+import { ActionSheetController, LoadingController, ModalController, ModalOptions, ToastController, ToastOptions } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Injectable({
@@ -12,6 +12,8 @@ export class UtilsService {
   toastCtrl = inject(ToastController);
   modalCtrl = inject(ModalController);
   router = inject(Router);
+
+  constructor(private actionSheetCtrl: ActionSheetController) {}
 
   // **LOADING**
   loading(){
@@ -52,16 +54,47 @@ export class UtilsService {
     return this.modalCtrl.dismiss(data);
   }
 
-  async takePicture(promptLabelHeader: string){
-    return await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Prompt,
-      promptLabelHeader,
-      promptLabelPhoto: 'Seleccionar una imagen',
-      promptLabelPicture: 'Tomar una foto',
-    });
-  }
+  async takePicture(): Promise<{ dataUrl: string } | null> {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Opciones de Imagen',
+      buttons: [
+        { text: 'Tomar Foto',
+          icon: 'camera',
+          handler: async () => {
+            const image = await this.captureImage(CameraSource.Camera);
+            actionSheet.dismiss(image); // Devuelve la imagen
+            },
+          },
+          {
+            text: 'Seleccionar de la Galería',
+            icon: 'image',
+            handler: async () => {
+              const image = await this.captureImage(CameraSource.Photos);
+              actionSheet.dismiss(image); // Devuelve la imagen
+              },
+            },
+            {
+              text: 'Cancelar',
+              role: 'cancel',
+              icon: 'close',
+              handler: () => {
+                console.log('Acción cancelada');
+              },
+            },
+          ],
+        });
+        await actionSheet.present();
+        const result = await actionSheet.onDidDismiss();
+        return result.data || null; // Devuelve la imagen seleccionada o null si se canceló
+        }
+
+        private async captureImage(source: CameraSource): Promise<{ dataUrl: string }> {
+           const image = await Camera.getPhoto({
+            quality: 90,
+            allowEditing: true,
+            resultType: CameraResultType.DataUrl,
+            source,
+          }); return { dataUrl: image.dataUrl };
+        }
 
 }
